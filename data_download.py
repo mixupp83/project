@@ -12,6 +12,7 @@ def add_moving_average(data, window_size=5):
     return data
 
 
+
 def calculate_and_display_average_price(data):
     if 'Close' in data.columns:
         average_price = data['Close'].mean()

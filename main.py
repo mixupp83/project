@@ -25,5 +25,6 @@ def main():
     dd.calculate_and_display_average_price(stock_data)
 
 
+
 if __name__ == "__main__":
     main()
