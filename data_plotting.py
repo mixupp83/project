@@ -1,8 +1,20 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import logging
 
+# Настройка логирования
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def create_and_save_plot(data, ticker, period, filename=None):
+    """
+    Создает и сохраняет график цены акций и скользящего среднего.
+
+    :param data: DataFrame с историческими данными.
+    :param ticker: Символ акции.
+    :param period: Период данных.
+    :param filename: Имя файла для сохранения графика.
+    """
+    logging.info(f"Создание графика для тикера {ticker} за период {period}")
     plt.figure(figsize=(10, 6))
 
     if 'Date' not in data:
@@ -11,6 +23,7 @@ def create_and_save_plot(data, ticker, period, filename=None):
             plt.plot(dates, data['Close'].values, label='Close Price')
             plt.plot(dates, data['Moving_Average'].values, label='Moving Average')
         else:
+            logging.error("Информация о дате отсутствует или не имеет распознаваемого формата.")
             print("Информация о дате отсутствует или не имеет распознаваемого формата.")
             return
     else:
@@ -28,4 +41,5 @@ def create_and_save_plot(data, ticker, period, filename=None):
         filename = f"{ticker}_{period}_stock_price_chart.png"
 
     plt.savefig(filename)
+    logging.info(f"График сохранен как {filename}")
     print(f"График сохранен как {filename}")
