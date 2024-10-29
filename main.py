@@ -1,7 +1,12 @@
 import data_download as dd
 import data_plotting as dplt
+import logging
+
+# Настройка логирования
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def main():
+    logging.info("Запуск программы")
     print("Добро пожаловать в инструмент получения и построения графиков биржевых данных.")
     print(
         "Вот несколько примеров биржевых тикеров, которые вы можете рассмотреть: AAPL (Apple Inc), GOOGL (Alphabet Inc), MSFT (Microsoft Corporation), AMZN (Amazon.com Inc), TSLA (Tesla Inc).")
@@ -26,6 +31,8 @@ def main():
 
     # Plot the data
     dplt.create_and_save_plot(stock_data, ticker, period)
+
+    logging.info("Программа завершена")
 
 if __name__ == "__main__":
     main()
