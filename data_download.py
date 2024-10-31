@@ -2,7 +2,6 @@ import yfinance as yf
 import pandas as pd
 import logging
 
-
 # Настройка логирования
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -67,3 +66,14 @@ def notify_if_strong_fluctuations(data, threshold):
     else:
         logging.warning("Столбец 'Close' отсутствует в данных.")
         print("Столбец 'Close' отсутствует в данных.")
+
+def export_data_to_csv(data, filename):
+    """
+    Экспортирует данные в CSV файл.
+
+    :param data: DataFrame с историческими данными.
+    :param filename: Имя файла для сохранения.
+    """
+    logging.info(f"Экспорт данных в файл {filename}")
+    data.to_csv(filename)
+    logging.info(f"Данные успешно экспортированы в файл {filename}")
