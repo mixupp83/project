@@ -32,6 +32,41 @@ def add_moving_average(data, window_size=5):
     logging.info("Скользящее среднее успешно добавлено")
     return data
 
+def calculate_rsi(data, window=14):
+    """
+    Рассчитывает индекс относительной силы (RSI).
+
+    :param data: DataFrame с историческими данными.
+    :param window: Размер окна для расчета RSI.
+    :return: DataFrame с добавленным RSI.
+    """
+    logging.info(f"Расчет RSI с размером окна {window}")
+    delta = data['Close'].diff()
+    gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=window).mean()
+    rs = gain / loss
+    data['RSI'] = 100 - (100 / (1 + rs))
+    logging.info("RSI успешно рассчитан")
+    return data
+
+def calculate_macd(data, short_window=12, long_window=26, signal_window=9):
+    """
+    Рассчитывает индикатор MACD.
+
+    :param data: DataFrame с историческими данными.
+    :param short_window: Короткий период для расчета EMA.
+    :param long_window: Длинный период для расчета EMA.
+    :param signal_window: Период для расчета сигнальной линии.
+    :return: DataFrame с добавленным MACD.
+    """
+    logging.info(f"Расчет MACD с коротким окном {short_window}, длинным окном {long_window} и сигнальным окном {signal_window}")
+    data['EMA_short'] = data['Close'].ewm(span=short_window, adjust=False).mean()
+    data['EMA_long'] = data['Close'].ewm(span=long_window, adjust=False).mean()
+    data['MACD'] = data['EMA_short'] - data['EMA_long']
+    data['Signal'] = data['MACD'].ewm(span=signal_window, adjust=False).mean()
+    logging.info("MACD успешно рассчитан")
+    return data
+
 def calculate_and_display_average_price(data):
     """
     Вычисляет и выводит среднюю цену закрытия за период.
