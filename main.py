@@ -24,6 +24,12 @@ def main():
     # Add moving average to the data
     stock_data = dd.add_moving_average(stock_data)
 
+    # Calculate RSI
+    stock_data = dd.calculate_rsi(stock_data)
+
+    # Calculate MACD
+    stock_data = dd.calculate_macd(stock_data)
+
     # Calculate and display average price
     dd.calculate_and_display_average_price(stock_data)
 
