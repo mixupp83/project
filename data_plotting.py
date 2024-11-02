@@ -7,7 +7,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 def create_and_save_plot(data, ticker, period, filename=None):
     """
-    Создает и сохраняет график цены акций и скользящего среднего.
+    Создает и сохраняет график цены акций, скользящего среднего, RSI и MACD.
 
     :param data: DataFrame с историческими данными.
     :param ticker: Символ акции.
@@ -15,8 +15,10 @@ def create_and_save_plot(data, ticker, period, filename=None):
     :param filename: Имя файла для сохранения графика.
     """
     logging.info(f"Создание графика для тикера {ticker} за период {period}")
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(15, 10))
 
+    # График цены и скользящего среднего
+    plt.subplot(3, 1, 1)
     if 'Date' not in data:
         if pd.api.types.is_datetime64_any_dtype(data.index):
             dates = data.index.to_numpy()
@@ -36,6 +38,31 @@ def create_and_save_plot(data, ticker, period, filename=None):
     plt.xlabel("Дата")
     plt.ylabel("Цена")
     plt.legend()
+
+    # График RSI
+    plt.subplot(3, 1, 2)
+    if 'RSI' in data.columns:
+        plt.plot(data.index, data['RSI'], label='RSI')
+        plt.axhline(y=70, color='r', linestyle='--', label='Overbought (70)')
+        plt.axhline(y=30, color='g', linestyle='--', label='Oversold (30)')
+        plt.title('Relative Strength Index (RSI)')
+        plt.xlabel("Дата")
+        plt.ylabel("RSI")
+        plt.legend()
+    else:
+        logging.warning("Столбец 'RSI' отсутствует в данных.")
+
+    # График MACD
+    plt.subplot(3, 1, 3)
+    if 'MACD' in data.columns and 'Signal' in data.columns:
+        plt.plot(data.index, data['MACD'], label='MACD')
+        plt.plot(data.index, data['Signal'], label='Signal')
+        plt.title('Moving Average Convergence Divergence (MACD)')
+        plt.xlabel("Дата")
+        plt.ylabel("MACD")
+        plt.legend()
+    else:
+        logging.warning("Столбцы 'MACD' или 'Signal' отсутствуют в данных.")
 
     if filename is None:
         filename = f"{ticker}_{period}_stock_price_chart.png"
