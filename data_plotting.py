@@ -5,6 +5,7 @@ import logging
 # Настройка логирования
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+
 def create_and_save_plot(data, ticker, period, filename=None):
     """
     Создает и сохраняет график цены акций, скользящего среднего, RSI и MACD.
