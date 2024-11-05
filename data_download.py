@@ -5,19 +5,28 @@ import logging
 # Настройка логирования
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def fetch_stock_data(ticker, period='1mo'):
+
+def fetch_stock_data(ticker, period=None, start_date=None, end_date=None):
     """
     Загружает исторические данные акций с Yahoo Finance.
 
     :param ticker: Символ акции (например, 'AAPL' для Apple Inc).
     :param period: Период данных (например, '1mo' для одного месяца).
+    :param start_date: Дата начала (в формате YYYY-MM-DD).
+    :param end_date: Дата окончания (в формате YYYY-MM-DD).
     :return: DataFrame с историческими данными.
     """
-    logging.info(f"Загрузка данных для тикера {ticker} за период {period}")
+    logging.info(f"Загрузка данных для тикера {ticker}")
     stock = yf.Ticker(ticker)
-    data = stock.history(period=period)
+    if period:
+        data = stock.history(period=period)
+    elif start_date and end_date:
+        data = stock.history(start=start_date, end=end_date)
+    else:
+        raise ValueError("Необходимо указать либо период, либо даты начала и окончания.")
     logging.info(f"Данные для тикера {ticker} успешно загружены")
     return data
+
 
 def add_moving_average(data, window_size=5):
     """
@@ -31,6 +40,7 @@ def add_moving_average(data, window_size=5):
     data['Moving_Average'] = data['Close'].rolling(window=window_size).mean()
     logging.info("Скользящее среднее успешно добавлено")
     return data
+
 
 def calculate_rsi(data, window=14):
     """
@@ -49,6 +59,7 @@ def calculate_rsi(data, window=14):
     logging.info("RSI успешно рассчитан")
     return data
 
+
 def calculate_macd(data, short_window=12, long_window=26, signal_window=9):
     """
     Рассчитывает индикатор MACD.
@@ -59,13 +70,15 @@ def calculate_macd(data, short_window=12, long_window=26, signal_window=9):
     :param signal_window: Период для расчета сигнальной линии.
     :return: DataFrame с добавленным MACD.
     """
-    logging.info(f"Расчет MACD с коротким окном {short_window}, длинным окном {long_window} и сигнальным окном {signal_window}")
+    logging.info(
+        f"Расчет MACD с коротким окном {short_window}, длинным окном {long_window} и сигнальным окном {signal_window}")
     data['EMA_short'] = data['Close'].ewm(span=short_window, adjust=False).mean()
     data['EMA_long'] = data['Close'].ewm(span=long_window, adjust=False).mean()
     data['MACD'] = data['EMA_short'] - data['EMA_long']
     data['Signal'] = data['MACD'].ewm(span=signal_window, adjust=False).mean()
     logging.info("MACD успешно рассчитан")
     return data
+
 
 def calculate_and_display_average_price(data):
     """
@@ -80,6 +93,7 @@ def calculate_and_display_average_price(data):
     else:
         logging.warning("Столбец 'Close' отсутствует в данных.")
         print("Столбец 'Close' отсутствует в данных.")
+
 
 def notify_if_strong_fluctuations(data, threshold):
     """
@@ -101,6 +115,7 @@ def notify_if_strong_fluctuations(data, threshold):
     else:
         logging.warning("Столбец 'Close' отсутствует в данных.")
         print("Столбец 'Close' отсутствует в данных.")
+
 
 def export_data_to_csv(data, filename):
     """
