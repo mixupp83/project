@@ -26,6 +26,7 @@ def main():
 
     threshold = float(input("Введите порог колебаний в процентах (например, 10 для 10%): "))
     csv_filename = input("Введите имя файла для экспорта данных в CSV (например, 'data.csv'): ")
+    style = input("Введите стиль оформления графика (например, 'seaborn', 'ggplot', 'default'): ")
 
     # Add moving average to the data
     stock_data = dd.add_moving_average(stock_data)
@@ -46,7 +47,7 @@ def main():
     dd.export_data_to_csv(stock_data, csv_filename)
 
     # Plot the data
-    dplt.create_and_save_plot(stock_data, ticker, period)
+    dplt.create_and_save_plot(stock_data, ticker, period, style=style)
 
     logging.info("Программа завершена")
 

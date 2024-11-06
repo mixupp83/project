@@ -6,7 +6,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
-def create_and_save_plot(data, ticker, period, filename=None):
+def create_and_save_plot(data, ticker, period, filename=None, style='default'):
     """
     Создает и сохраняет график цены акций, скользящего среднего, RSI и MACD.
 
@@ -14,8 +14,18 @@ def create_and_save_plot(data, ticker, period, filename=None):
     :param ticker: Символ акции.
     :param period: Период данных.
     :param filename: Имя файла для сохранения графика.
+    :param style: Стиль оформления графика (например, 'seaborn', 'ggplot', 'default').
     """
-    logging.info(f"Создание графика для тикера {ticker} за период {period}")
+    logging.info(f"Создание графика для тикера {ticker} за период {period} со стилем {style}")
+
+    # Проверяем, является ли стиль допустимым
+    if style not in plt.style.available:
+        logging.warning(f"Стиль '{style}' не найден. Используется стиль по умолчанию.")
+        style = 'default'
+
+    # Применяем выбранный стиль
+    plt.style.use(style)
+
     plt.figure(figsize=(15, 10))
 
     # График цены и скользящего среднего
