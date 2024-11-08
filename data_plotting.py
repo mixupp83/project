@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 def create_and_save_plot(data, ticker, period, filename=None, style='default'):
     """
-    Создает и сохраняет график цены акций, скользящего среднего, RSI и MACD.
+    Создает и сохраняет график цены акций, скользящего среднего, RSI, MACD и стандартного отклонения.
 
     :param data: DataFrame с историческими данными.
     :param ticker: Символ акции.
@@ -26,10 +26,10 @@ def create_and_save_plot(data, ticker, period, filename=None, style='default'):
     # Применяем выбранный стиль
     plt.style.use(style)
 
-    plt.figure(figsize=(15, 10))
+    plt.figure(figsize=(15, 12))
 
     # График цены и скользящего среднего
-    plt.subplot(3, 1, 1)
+    plt.subplot(4, 1, 1)
     if 'Date' not in data:
         if pd.api.types.is_datetime64_any_dtype(data.index):
             dates = data.index.to_numpy()
@@ -51,7 +51,7 @@ def create_and_save_plot(data, ticker, period, filename=None, style='default'):
     plt.legend()
 
     # График RSI
-    plt.subplot(3, 1, 2)
+    plt.subplot(4, 1, 2)
     if 'RSI' in data.columns:
         plt.plot(data.index, data['RSI'], label='RSI')
         plt.axhline(y=70, color='r', linestyle='--', label='Overbought (70)')
@@ -64,7 +64,7 @@ def create_and_save_plot(data, ticker, period, filename=None, style='default'):
         logging.warning("Столбец 'RSI' отсутствует в данных.")
 
     # График MACD
-    plt.subplot(3, 1, 3)
+    plt.subplot(4, 1, 3)
     if 'MACD' in data.columns and 'Signal' in data.columns:
         plt.plot(data.index, data['MACD'], label='MACD')
         plt.plot(data.index, data['Signal'], label='Signal')
@@ -74,6 +74,17 @@ def create_and_save_plot(data, ticker, period, filename=None, style='default'):
         plt.legend()
     else:
         logging.warning("Столбцы 'MACD' или 'Signal' отсутствуют в данных.")
+
+    # График стандартного отклонения
+    plt.subplot(4, 1, 4)
+    if 'Std_Dev' in data.columns:
+        plt.plot(data.index, data['Std_Dev'], label='Standard Deviation')
+        plt.title('Standard Deviation of Close Price')
+        plt.xlabel("Дата")
+        plt.ylabel("Standard Deviation")
+        plt.legend()
+    else:
+        logging.warning("Столбец 'Std_Dev' отсутствует в данных.")
 
     if filename is None:
         filename = f"{ticker}_{period}_stock_price_chart.png"

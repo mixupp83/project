@@ -5,7 +5,6 @@ import logging
 # Настройка логирования
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-
 def main():
     logging.info("Запуск программы")
     print("Добро пожаловать в инструмент получения и построения графиков биржевых данных.")
@@ -37,6 +36,9 @@ def main():
     # Calculate MACD
     stock_data = dd.calculate_macd(stock_data)
 
+    # Calculate standard deviation
+    stock_data = dd.calculate_standard_deviation(stock_data)
+
     # Calculate and display average price
     dd.calculate_and_display_average_price(stock_data)
 
@@ -50,7 +52,6 @@ def main():
     dplt.create_and_save_plot(stock_data, ticker, period, style=style)
 
     logging.info("Программа завершена")
-
 
 if __name__ == "__main__":
     main()

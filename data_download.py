@@ -5,7 +5,6 @@ import logging
 # Настройка логирования
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-
 def fetch_stock_data(ticker, period=None, start_date=None, end_date=None):
     """
     Загружает исторические данные акций с Yahoo Finance.
@@ -27,7 +26,6 @@ def fetch_stock_data(ticker, period=None, start_date=None, end_date=None):
     logging.info(f"Данные для тикера {ticker} успешно загружены")
     return data
 
-
 def add_moving_average(data, window_size=5):
     """
     Добавляет скользящее среднее к данным.
@@ -40,7 +38,6 @@ def add_moving_average(data, window_size=5):
     data['Moving_Average'] = data['Close'].rolling(window=window_size).mean()
     logging.info("Скользящее среднее успешно добавлено")
     return data
-
 
 def calculate_rsi(data, window=14):
     """
@@ -58,7 +55,6 @@ def calculate_rsi(data, window=14):
     data['RSI'] = 100 - (100 / (1 + rs))
     logging.info("RSI успешно рассчитан")
     return data
-
 
 def calculate_macd(data, short_window=12, long_window=26, signal_window=9):
     """
@@ -79,7 +75,6 @@ def calculate_macd(data, short_window=12, long_window=26, signal_window=9):
     logging.info("MACD успешно рассчитан")
     return data
 
-
 def calculate_and_display_average_price(data):
     """
     Вычисляет и выводит среднюю цену закрытия за период.
@@ -93,7 +88,6 @@ def calculate_and_display_average_price(data):
     else:
         logging.warning("Столбец 'Close' отсутствует в данных.")
         print("Столбец 'Close' отсутствует в данных.")
-
 
 def notify_if_strong_fluctuations(data, threshold):
     """
@@ -116,7 +110,6 @@ def notify_if_strong_fluctuations(data, threshold):
         logging.warning("Столбец 'Close' отсутствует в данных.")
         print("Столбец 'Close' отсутствует в данных.")
 
-
 def export_data_to_csv(data, filename):
     """
     Экспортирует данные в CSV файл.
@@ -127,3 +120,15 @@ def export_data_to_csv(data, filename):
     logging.info(f"Экспорт данных в файл {filename}")
     data.to_csv(filename)
     logging.info(f"Данные успешно экспортированы в файл {filename}")
+
+def calculate_standard_deviation(data):
+    """
+    Рассчитывает стандартное отклонение цены закрытия.
+
+    :param data: DataFrame с историческими данными.
+    :return: DataFrame с добавленным стандартным отклонением.
+    """
+    logging.info("Расчет стандартного отклонения цены закрытия")
+    data['Std_Dev'] = data['Close'].rolling(window=20).std()
+    logging.info("Стандартное отклонение успешно рассчитано")
+    return data
