@@ -51,6 +51,9 @@ def main():
     # Plot the data
     dplt.create_and_save_plot(stock_data, ticker, period, style=style)
 
+    # Create interactive plot
+    dplt.create_interactive_plot(stock_data, ticker)
+
     logging.info("Программа завершена")
 
 if __name__ == "__main__":
